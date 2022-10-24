@@ -6,7 +6,7 @@ An application which integrates with coin desk APIs to get coin informations lik
 
 ### Dependencies
 
-* Requires JDK 11 for compiling and running the application
+* Requires JDK 11 or above for compiling and running the application
 
 ### Executing program
 
@@ -46,6 +46,14 @@ Sample output
 ```
 mvn test
 ```
+
+### Key Highlights
+* The Code could be easily extensible for other coins. E.g. You can write a class implementing CoinService and providing custom implementation of the required methods.
+* No Hardcoding of the time duration. E.g. User needs to pass the duration, the program would calculate the endDate based on the startDate and the duration.
+* No major Sonar issues.
+* More than 70% methods are covered by test cases.
+* The project takes into consideration the separation of concerns.
+
 ## Author
 
 [Monisha Gupta](guptamonisha07@gmail.com)

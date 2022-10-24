@@ -18,10 +18,8 @@ public class Validator {
     }
 
     public static void validate(int duration) {
-
         if (duration < 0) {
             throw new NumberFormatException("Not a valid duration");
         }
-
     }
 }

@@ -1,11 +1,9 @@
 package com.kuehne.nagel.coin.desk;
 
-import com.kuehne.nagel.coin.desk.exception.HttpClientException;
 import com.kuehne.nagel.coin.desk.service.BitCoinServiceImpl;
 import com.kuehne.nagel.coin.desk.util.Validator;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 

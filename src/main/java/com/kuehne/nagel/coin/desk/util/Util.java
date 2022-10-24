@@ -8,8 +8,6 @@ import java.net.http.HttpResponse;
 import java.util.Optional;
 
 public class Util {
-
-
     public static String getApiResponse(final String url) throws IOException, InterruptedException {
         if(url == null || url.isEmpty()){
             throw new IllegalArgumentException("URL is not given");

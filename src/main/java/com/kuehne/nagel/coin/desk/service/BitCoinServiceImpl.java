@@ -31,7 +31,7 @@ public class BitCoinServiceImpl implements CoinService {
             @SuppressWarnings("unchecked") final TreeMap<String, Double> rateMap = new Gson().fromJson(String.valueOf(currencyBpi), TreeMap.class);
             return Optional.of(rateMap.get("rate_float")).orElseThrow();
         } catch (Exception e) {
-            throw new InternalServerError(String.format(ErrorMessage.GET_CURRENT_RATE_ERROR.description , currency));
+            throw new InternalServerError(String.format(ErrorMessage.GET_CURRENT_RATE_ERROR.getDescription() , currency));
         }
     }
 
@@ -56,15 +56,15 @@ public class BitCoinServiceImpl implements CoinService {
             final JSONObject currencyBpi = rateDetails.getJSONObject(BRAND_POTENTIAL_INDEX);
             return Optional.ofNullable(currencyBpi).orElseThrow();
         } catch (InterruptedException e) {
-            LOG.log(Level.SEVERE, String.format(ErrorMessage.RESPONSE_ERROR.description+" %s", url), e);
+            LOG.log(Level.SEVERE, String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url), e);
             Thread.currentThread().interrupt();
-            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.description+" %s", url));
+            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url));
         } catch (IOException e) {
-            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.description+" %s", url));
+            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url));
         } catch (JSONException e) {
-            throw new InternalServerError(ErrorMessage.INTERNAL_SERVER_ERROR.description);
+            throw new InternalServerError(ErrorMessage.INTERNAL_SERVER_ERROR.getDescription());
         } catch (NoSuchElementException e) {
-            throw new NoRateAvailableException(String.format(ErrorMessage.NO_RATE_ERROR.description, currency, url));
+            throw new NoRateAvailableException(String.format(ErrorMessage.NO_RATE_ERROR.getDescription(), currency, url));
         }
     }
 

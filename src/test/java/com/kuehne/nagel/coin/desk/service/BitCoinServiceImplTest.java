@@ -2,7 +2,6 @@ package com.kuehne.nagel.coin.desk.service;
 
 import com.kuehne.nagel.coin.desk.exception.CurrencyNoSupportedException;
 import com.kuehne.nagel.coin.desk.exception.InternalServerError;
-import com.kuehne.nagel.coin.desk.util.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,11 +18,10 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class BitCoinServiceImplTest extends Mockito {
+class BitCoinServiceImplTest extends Mockito {
 
     final String GET_CURRENT_RATE_URL = BitCoinServiceImpl.BASE_URL + "currentprice/INR.json";
     final String GET_HISTORICAL_URL = BitCoinServiceImpl.BASE_URL + "historical/close.json";
@@ -64,42 +62,44 @@ public class BitCoinServiceImplTest extends Mockito {
     }
 
     @Test
-    public void testGetCurrentRateByCurrency_when_success() throws IOException, InterruptedException {
+    void testGetCurrentRateByCurrency_when_success() throws IOException, InterruptedException {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(GET_CURRENT_RATE_URL))
                 .build();
 
         HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(response.statusCode(), 200);
-
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("INR"));
+        assertTrue(response.body().contains("\"code\":\"INR\""));
     }
 
     @Test
-
-    public void testGetCurrentRate_when_no_currency_supported() {
-        assertThrows(CurrencyNoSupportedException.class, () -> (new BitCoinServiceImpl()).getCurrentRateByCurrency("YYY"));
+    void testGetCurrentRate_when_no_currency_supported() {
+        final CoinService coinService = new BitCoinServiceImpl();
+        assertThrows(CurrencyNoSupportedException.class, () -> (coinService).getCurrentRateByCurrency("YYY"));
     }
 
     @Test
-    public void testGetCurrentRateByCurrency_when_IO_Exception() throws IOException, InterruptedException {
+    void testGetCurrentRateByCurrency_when_IO_Exception() throws IOException, InterruptedException {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(BitCoinServiceImpl.BASE_URL + "/currentprice1/INR.json"))
                 // HTTP method defaults to GET if not specified
                 .build();
 
         HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(response.statusCode(), 404);
+        assertEquals(404, response.statusCode());
 
     }
 
     @Test
     void testGetCurrentRateByCurrency_when_IllegalArgument_Exception() {
-        assertThrows(IllegalArgumentException.class, () -> (new BitCoinServiceImpl())
+        final CoinService coinService = new BitCoinServiceImpl();
+        assertThrows(IllegalArgumentException.class, () -> (coinService)
                 .getCurrentRateByCurrency("Exception occurred while getting current rate of currency:%s, cause:%s"));
     }
 
     @Test
-    public void testGetHistoricalDetails_when_success() throws IOException, InterruptedException {
+    void testGetHistoricalDetails_when_success() throws IOException, InterruptedException {
         LocalDate startDate = LocalDate.parse("2018-09-09");
         LocalDate endDate = LocalDate.parse("2018-10-09");
 
@@ -109,15 +109,36 @@ public class BitCoinServiceImplTest extends Mockito {
                 .build();
 
         final HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(response.statusCode(), 200);
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().contains("INR"));
     }
 
+    @Test
+    void testGetHistoricalDetails_when_exception() throws IOException, InterruptedException {
+        LocalDate startDate = LocalDate.parse("1818-09-09");
+        LocalDate endDate = LocalDate.parse("6000-10-09");
+
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(GET_HISTORICAL_URL + "?start=" + startDate + "&end=" + endDate + "&currency=INR"))
+                // HTTP method defaults to GET if not specified
+                .build();
+
+        final HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        assertEquals(404, response.statusCode());
+        assertTrue(response.body().contains("Please alter your start date and try again"));
+    }
 
     @Test
     void testGetHistoricalDetails_when_Exception() {
+        final CoinService coinService = new BitCoinServiceImpl();
         assertThrows(InternalServerError.class,
-                () -> (new BitCoinServiceImpl()).getHistoricalDetails("XXX", null, null, 1));
-        assertThrows(IllegalArgumentException.class, () -> (new BitCoinServiceImpl())
+                () -> (coinService).getHistoricalDetails("XXX", null, null, 1));
+    }
+
+    @Test
+    void testGetHistoricalDetails_when_IllegalArgException() {
+        final CoinService coinService = new BitCoinServiceImpl();
+        assertThrows(IllegalArgumentException.class, () -> (coinService)
                 .getHistoricalDetails("Exception occurred while getting current rate of currency:%s, cause:%s", null, null, 1));
     }
 
@@ -129,20 +150,22 @@ public class BitCoinServiceImplTest extends Mockito {
         stream.forEach(i -> historicalMap.put(String.valueOf(i), Double.valueOf(i)));
         Optional<Double> lowestRate = coinService.getHighestRate(historicalMap);
         assertEquals(lowestRate, Optional.of(4.0));
+
+
     }
 
     @Test
     void testGetHighestRate_when_internal_server_error() {
         CoinService coinService = new BitCoinServiceImpl();
         Optional<Double> highestRate = coinService.getHighestRate(null);
-        assertEquals(highestRate.isEmpty(), Boolean.TRUE);
+        assertEquals(Boolean.TRUE, highestRate.isEmpty());
     }
 
     @Test
     void testGetLowestRate_when_internal_server_error() {
         CoinService coinService = new BitCoinServiceImpl();
         Optional<Double> lowestRate = coinService.getLowestRate(null);
-        assertEquals(lowestRate.isEmpty(), Boolean.TRUE);
+        assertEquals(Boolean.TRUE, lowestRate.isEmpty());
     }
 
     @Test
@@ -152,7 +175,7 @@ public class BitCoinServiceImplTest extends Mockito {
         IntStream stream = IntStream.range(1, 5);
         stream.forEach(i -> historicalMap.put(String.valueOf(i), Double.valueOf(i)));
         Optional<Double> lowestRate = coinService.getLowestRate(historicalMap);
-        assertEquals(lowestRate, Optional.of(1.0));
+        assertEquals(Optional.of(1.0), lowestRate);
     }
 
     @Test
