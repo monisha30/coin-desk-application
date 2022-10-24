@@ -23,8 +23,14 @@ class ValidatorTest extends Mockito {
     }
 
     @Test
-    void testValidate2() {
+    void testValidate_when_number_format_exception() {
         assertThrows(NumberFormatException.class, () -> Validator.validate(-1));
+    }
+
+    @Test
+    void testValidate_when_exception() {
+        assertThrows(NumberFormatException.class,
+                () -> Validator.validateAndReturn("abc"));
     }
 }
 

@@ -34,22 +34,21 @@ public class CoinDeskApplication {
         }
     }
 
-    private static int getDuration(Scanner scanner) {
+    private static int getDuration(final Scanner scanner) {
         LOG.info("Enter duration in days ( E.g. 90): ");
-        int duration = scanner.nextInt();
-        Validator.validate(duration);
-        return duration;
+        final String duration = scanner.next();
+        return Validator.validateAndReturn(duration);
     }
 
-    private static String getStartDate(Scanner scanner) {
+    private static String getStartDate(final Scanner scanner) {
         LOG.info("Enter start date (" + DATE_FORMATTER + "): ");
-        String startDate = scanner.next();
+        final String startDate = scanner.next();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMATTER);
         Validator.validateDate(startDate, formatter);
         return startDate;
     }
 
-    private static String getCurrency(Scanner scanner) {
+    private static String getCurrency(final Scanner scanner) {
         LOG.info("Enter a currency code (E.g. USD): ");
         final String currency = scanner.next();
         if (currency == null || currency.isEmpty()) {
