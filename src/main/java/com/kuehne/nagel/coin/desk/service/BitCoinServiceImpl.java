@@ -56,11 +56,11 @@ public class BitCoinServiceImpl implements CoinService {
             final JSONObject currencyBpi = rateDetails.getJSONObject(BRAND_POTENTIAL_INDEX);
             return Optional.ofNullable(currencyBpi).orElseThrow();
         } catch (InterruptedException e) {
-            LOG.log(Level.SEVERE, String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url), e);
+            LOG.log(Level.SEVERE, String.format(ErrorMessage.RESPONSE_ERROR.getDescription(), url), e);
             Thread.currentThread().interrupt();
-            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url));
+            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription(), url));
         } catch (IOException e) {
-            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription()+" %s", url));
+            throw new HttpClientException(String.format(ErrorMessage.RESPONSE_ERROR.getDescription(), url));
         } catch (JSONException e) {
             throw new InternalServerError(ErrorMessage.INTERNAL_SERVER_ERROR.getDescription());
         } catch (NoSuchElementException e) {

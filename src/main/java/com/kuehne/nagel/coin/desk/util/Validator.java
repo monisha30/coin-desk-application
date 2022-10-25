@@ -5,6 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Validator {
+
+    private Validator() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void validateDate(final String dateStr,final DateTimeFormatter dateFormatter) {
         if (dateStr == null || dateStr.isEmpty()) {
             throw new IllegalArgumentException("Date is not given");
