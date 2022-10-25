@@ -6,7 +6,7 @@
 
     <groupId>com.kuehne.nagel.coin.desk</groupId>
     <artifactId>coin-desk-application</artifactId>
-    <version>1.0-RELEASE</version>
+    <version>1.0.0.RELEASE</version>
     <build>
         <plugins>
             <plugin>
