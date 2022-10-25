@@ -109,8 +109,8 @@ public class BitCoinServiceImpl implements CoinService {
         message.append(String.format("End Date: %s", endDate) + "\n\n");
 
         message.append(String.format("The CURRENT Bitcoin rate: %s ", currentRate) + "\n");
-        message.append(String.format("The LOWEST Bitcoin rate in last %d day(s): %s", duration, lowestRate) + "\n");
-        message.append(String.format("The HIGHEST Bitcoin rate in last %d day(s): %s", duration, highestRate) + "\n\n");
+        message.append(String.format("The LOWEST Bitcoin rate from %s to %s is : %s", startDate,endDate,lowestRate) + "\n");
+        message.append(String.format("The HIGHEST Bitcoin rate from %s to %s is : %s", startDate, endDate,highestRate) + "\n\n");
         message.append("-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-");
         if (LOG.isLoggable(Level.INFO)) {
             LOG.log(Level.INFO, String.valueOf(message));
